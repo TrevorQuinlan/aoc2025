@@ -1,0 +1,45 @@
+position = 50
+count = 0
+array = []
+testArray = ["L68","L30","R48","L5","R60","L55","L1","L99","R14","L82"]
+
+
+def fillArray():
+    global array
+    with open("input.txt", "r") as f:
+        for line in f:
+            array.append(line.strip())
+
+def turn(array) -> int:
+    global position, count
+    print(f"The dial starts by pointing at {position}.")
+    for line in array:
+        if line.startswith("R"):
+            strippedLine = line[1:]
+            turnBy = (int(strippedLine))
+            for i in range(0, (turnBy)):
+                if position < 99:
+                    position += 1
+                else:
+                    position = 0
+                if position == 0:
+                    count += 1
+            print(f"The dial is rotated {line} to point at {position}")
+
+        if line.startswith("L"):
+            strippedLine = line[1:]
+            turnBy = int(strippedLine)
+            for i in range(0, (turnBy)):
+                if position > 0:
+                    position -= 1
+                else:
+                    position = 99
+                if position == 0:
+                    count += 1
+            print(f"The dial is rotated {line} to point at {position}")
+
+        #if position == 0:
+            #count += 1
+fillArray()
+turn(array)
+print(count)
