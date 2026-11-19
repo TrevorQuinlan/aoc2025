@@ -1,0 +1,50 @@
+import sys
+
+example = [987654321111111,811111111111119,234234234234278,818181911112111]
+array = []
+highestNums = []
+def fillArrayFromFile():
+    with open("input.txt","r") as f:
+        for line in f:
+            values = line.strip().split("\n")
+            for value in values:
+                array.append(value)
+
+def convertArrayToString(array):
+    if isinstance(array[0], int):
+        array = [str(line) for line in array]
+    else:
+        pass
+    return array
+
+def findHighest(array, i, batteries):
+    highest = []
+    start = 0
+
+    while(len(highest) < batteries):
+        remaining = batteries - len(highest)
+        end = len(array[i]) - remaining
+        highestNum = max(array[i][start:end + 1])
+        highestIndex = array[i].index(highestNum, start, end + 1)
+        highest.append(str(highestNum))
+        start = highestIndex + 1
+    return highest
+
+def main():
+    global array, highestNums, example
+    if len(sys.argv) > 1:
+        args = sys.argv
+        if args[1] == "example":
+            array = example
+    else:
+        fillArrayFromFile()
+    array = convertArrayToString(array)
+    convertArrayToString(array)
+    for i in range(0, len(array)):
+        highestNums.append(''.join(map(str,findHighest(array, i, 12))))
+    print(f"======= Highest Nums ======")
+    print(f"{highestNums}")
+    print(f"TOTAL:{sum(map(int, highestNums))}")
+
+if __name__ == "__main__":
+    main()
