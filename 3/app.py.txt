@@ -42,7 +42,7 @@ def main():
     convertArrayToString(array)
     for i in range(0, len(array)):
         highestNums.append(''.join(map(str,findHighest(array, i, 12))))
-    print(f"======= Highest Nums ======")
+    print(f"====== Highest Nums ======")
     print(f"{highestNums}")
     print(f"TOTAL:{sum(map(int, highestNums))}")
 
