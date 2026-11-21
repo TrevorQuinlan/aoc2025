@@ -106,7 +106,14 @@ def checkRolls(array):
                         coordinates.append((i,j))
                         continue
 
-    return rolls
+    for x,y in coordinates:
+        charString = list(array[x])
+        charString[y] = "."
+        array[x] = ''.join(charString)
+    if rolls != 0:
+        return rolls + checkRolls(array)
+    else:
+        return rolls
 
 def main():
     if len(sys.argv) > 1:
@@ -119,7 +126,7 @@ def main():
     rolls = checkRolls(array)
     for line in array:
         print(line)
-    print(rolls)
 
+    print(f"Rolls: {rolls}")
 if __name__ == "__main__":
     main()
