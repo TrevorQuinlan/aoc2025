@@ -1,0 +1,96 @@
+import sys
+
+ranges = []
+ids = []
+nums = []
+newRanges = []
+def importRangesAndIDs(filepath):
+    with open(f"{filepath}", "r") as f:
+        while(True):
+            line = f.readline()
+            if "-" in line:
+                values = line.strip("\n").split("-")
+                ranges.append(values)
+                continue
+            if line == "\n":
+                continue
+            if not line:
+                break
+            else:
+                ids.append(line.strip())
+def pt1(sortedRanges, sortedIDs):
+    count = 0
+    for id in sortedIDs:
+        for i in range(0,len(sortedRanges)):
+            if id >= sortedRanges[i][0] and id <= sortedRanges[i][1]:
+                #print(f"ID: {id} WITHIN: {sortedRanges[i][0]} AND {sortedRanges[i][1]}")
+                count += 1
+                break
+    print(count)
+
+def pt2(sortedRanges):
+    global newRanges
+    lowest = sortedRanges[0][0]
+    highest = sortedRanges[0][1]
+    values = [lowest,highest]
+    for i in range(len(sortedRanges)):
+        print(f"checking if {sortedRanges[i][0]} > {highest}")
+        if sortedRanges[i][0] > highest:
+            print("It is")
+            values = [lowest, highest]
+            newRanges.append(values)
+            print(f"Appended {values}")
+            lowest = sortedRanges[i][0]
+            print(f"Lowest is now {lowest}")
+            highest = sortedRanges[i][1]
+            print(f"Highest is now {highest}")
+            continue
+        if sortedRanges[i][0] >= lowest and sortedRanges[i][0] <= highest:
+            print(f"{sortedRanges[i][0]} is above {lowest} and below {highest}")
+            print(f"Lowest is still {lowest}")
+            print(f"Checking {sortedRanges[i][1]} against {highest}")
+            if sortedRanges[i][1] <= highest:
+                print(f"Highest is still {highest}")
+            else:
+                print(f"Highest is now {sortedRanges[i][1]}")
+                highest = sortedRanges[i][1]
+            continue
+            # NO NEED TO CHECK IF sortedRanges[I][0] IS BELOW LOWEST, THE INPUT IS A SORTED LIST.
+
+    values = [lowest, highest]
+    if newRanges[len(newRanges)-1] == values:
+        pass
+    else:
+        newRanges.append(values)
+    print("\n\n==== NEW RANGES ===\n")
+    for ranges in newRanges:
+        print(ranges)
+
+
+def main():
+    global ranges, ids, sortedRanges, sortedIds
+    total = 0
+    if len(sys.argv) > 1:
+        args = sys.argv
+        if args[1] == "example":
+            # Do stuff with exmaple input
+            importRangesAndIDs("example.txt")
+            sortedRanges = sorted([[int(x) for x in innerList] for innerList in ranges])
+            sortedIDs = sorted([int(x) for x in ids])
+            pt1(sortedRanges, sortedIDs)
+            pt2(sortedRanges)
+    else:
+        #Do stuff with real input
+        importRangesAndIDs("input.txt")
+        sortedRanges = sorted([[int(x) for x in innerList] for innerList in ranges])
+        sortedIDs = sorted([int(x) for x in ids])
+        pt1(sortedRanges, sortedIDs)
+        pt2(sortedRanges)
+    for nums in newRanges:
+        diff = nums[1] - nums[0] + 1
+        if diff == 0:
+            diff = 1
+        total += diff
+    print(f"Total fresh ingredients: {total}")
+if __name__ == "__main__":
+    main()
