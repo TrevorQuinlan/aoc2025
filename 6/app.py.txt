@@ -1,0 +1,99 @@
+import sys
+
+grandTotal = 0
+array = []
+operators = []
+newArray = []
+newOperatorsArray = []
+
+def parseInput(file):
+    #COPY/PASTE FROM PREVIOUS DAYS, CHANGE SPLITS
+    with open(f"{file}", "r") as f:
+        for line in f:
+            values = line.strip().split()
+            if all(str(x).isdigit() for x in values):
+                array.append(values)
+            else:
+                operators.append(values)
+
+def reorganize(array, operators):
+    global newArray, newOperatorsArray
+    newArray = [[] for _ in range(len(array[0]))]
+    newOperatorsArray = [[] for _ in range(len(operators[0]))]
+    #REORGANIZE ARRAY OF NUMBERS FIRST
+    #GROUPING BY SUBINDEX OF MAIN INDEX
+    for i in range(len(array[0])):
+        for j in range(len(array)):
+            newArray[i].append(array[j][i])
+    for m in range(len(operators[0])):
+        for n in range(len(operators)):
+            newOperatorsArray[m].append(operators[n][m])
+
+def calculate(array, operators):
+    results = []
+    sumOfResults = 9
+    for i in range(len(array)):
+        result = 0
+        print(f"Beginning Number: {result}")
+        print(f"Operator: {operators[i][0]}")
+        match operators[i][0]:
+            case '+':
+                print("Adding")
+                for j in range(len(array[i])):
+                    result += int(array[i][j])
+                    print(f"{result} + {array[i][j]} = {result}")
+                print(result)
+                results.append(result)
+            case '-':
+                print("Subtracting")
+                for j in range(len(array[i])):
+                    result -= int(array[i][j])
+                    print(f"{result} - {array[i][j]} = {result}")
+                print(result)
+                results.append(result)
+            case '*':
+                print("Multiplying")
+                for j in range(len(array[i])):
+                    if result == 0:
+                        result = 1
+                    result *= int(array[i][j])
+                    print(f"{result} * {array[i][j]} = {result}")
+                print(result)
+                results.append(result)
+            case '/':
+                print("Dividing")
+                for j in range(len(array[i])):
+                    result /= int(array[i][j])
+                    print(f"{result} / {array[i][j]} = {result}")
+                print(result)
+                results.append(result)
+            case _:
+                results.append(0)
+
+    sumOfResults = sum(results)
+    print(f"TOTAL: {sumOfResults}")
+    print(sumOfResults)
+
+def main():
+    global array, newArray, operators, newOperatorsArray
+    if len(sys.argv) > 1:
+        args = sys.argv
+        if args[1] == "example":
+            parseInput("example.txt")
+    else:
+        parseInput("input.txt")
+    reorganize(array, operators)
+    print("=== Input Numbers ===")
+    print(array)
+    print("\n=== Reorganized Numbers ===")
+    print(newArray)
+    print("\n=== Input Operators ===")
+    print(operators)
+    print("\n=== Reorganized Operators ===")
+    print(newOperatorsArray)
+
+    calculate(newArray, newOperatorsArray)
+
+
+if __name__ == "__main__":
+    main()
