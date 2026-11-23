@@ -15,6 +15,84 @@ def parseInput(file):
                 array.append(values)
             else:
                 operators.append(values)
+def parseInputPt2(file):
+    # THIS FUNCTION WAS CHATJIPPITY GENERATED FOR PT 2
+    global array, operators
+
+    with open(file, "r") as f:
+        lines = [line.rstrip("\n") for line in f]
+    # Everything except the last row contains digits
+    array = [list(line) for line in lines[:-1]]
+
+    # Last row contains the arithemetic operators
+    operators = list(lines[-1])
+
+def reorganizePt2(array, operators):
+    # THIS FUNCTION WAS CHATJIPPITY GENERATED FOR PT 2
+    global newArray, newOperatorsArray
+
+    newArray = []
+    newOperatorsArray = []
+
+    width = len(array[0])
+    problemColumns = []
+
+    for col in range(width):
+
+        # Check whether this column contains any digits
+        if any(array[row][col].isdigit() for row in range(len(array))):
+            problemColumns.append(col)
+
+        else:
+            # Empty column means we've reached the end of a problem
+            if problemColumns:
+                numbers = []
+
+                for c in problemColumns:
+                    number = ""
+
+                    for row in range(len(array)):
+                        if array[row][c].isdigit():
+                            number += array[row][c]
+
+                    if number:
+                        numbers.append(int(number))
+
+                # Find the operator aligned with this problem
+                op = next(
+                    operators[c]
+                    for c in problemColumns
+                    if operators[c].strip()
+                )
+
+                newArray.append(numbers)
+                newOperatorsArray.append([op])
+
+                problemColumns = []
+
+    # Process the final problem (there may be no trailing empty column)
+    if problemColumns:
+        numbers = []
+
+        for c in problemColumns:
+            number = ""
+
+            for row in range(len(array)):
+                if array[row][c].isdigit():
+                    number += array[row][c]
+
+            if number:
+                numbers.append(int(number))
+
+        op = next(
+            operators[c]
+            for c in problemColumns
+            if operators[c].strip()
+        )
+
+        newArray.append(numbers)
+        newOperatorsArray.append([op])
+
 
 def reorganize(array, operators):
     global newArray, newOperatorsArray
@@ -79,10 +157,16 @@ def main():
     if len(sys.argv) > 1:
         args = sys.argv
         if args[1] == "example":
+            if args[2] == "pt2":
+                parseInputPt2("example.txt")
+                reorganizePt2(array, operators)
             parseInput("example.txt")
+        if args[1] == "pt2":
+            parseInputPt2("input.txt")
+            reorganizePt2(array, operators)
     else:
         parseInput("input.txt")
-    reorganize(array, operators)
+        reorganize(array, operators)
     print("=== Input Numbers ===")
     print(array)
     print("\n=== Reorganized Numbers ===")
